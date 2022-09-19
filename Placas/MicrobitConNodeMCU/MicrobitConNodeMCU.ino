@@ -16,40 +16,6 @@ unsigned long lastTime = 0;
 String json = "";
 int httpResponseCode = 0;
 String serverName = "NULL";
-String recivedData = "UNSET:NULL";
-String recivedCommand = "UNSET";
-String recivedValue = "";
-int separationIndex = -1;
-
-String receiveCommand(String command, String previusCommand)
-{
-  Serial.println("Esperando " + command);
-  recivedData = "UNSET:NULL";
-  separationIndex = -1 ;
-  Serial.println("recibi: " + recivedData);
-  mySerial.print(previusCommand);
-  Serial.println("Enviando " + previusCommand);
-  while (recivedCommand != command)
-  {
-    while (!mySerial.available())
-    {
-    }
-    mySerial.print(previusCommand);
-    Serial.println("Enviando " + previusCommand);
-    recivedData = mySerial.readString();
-    separationIndex = recivedData.indexOf(":");
-    if (separationIndex != -1)
-    {
-      recivedCommand = recivedData.substring(0, separationIndex);
-      recivedValue = recivedData.substring(separationIndex + 1, recivedData.length());
-      Serial.println("recivedValue: " + recivedValue);
-    }
-    Serial.println("recivedCommand: " + recivedCommand);
-    Serial.println("recibi: " + recivedData);
-    separationIndex = -1;
-  }
-  return recivedValue;
-}
 
 void setup()
 {
@@ -58,51 +24,7 @@ void setup()
   Serial.begin(115200);
   mySerial.begin(9600);
   delay(100);
-  // Get Wifi parameters via serial
-  /*
-  Serial.println("Esperando Nombre de Red");
-  delay(100);
-  while ( recivedCommand != "NETWORK" ) {
-    while (!mySerial.available()) {
-    }
-    recivedData = mySerial.readString();
-    separationIndex = recivedData.indexOf(":");
-    if (separationIndex != -1) {
-      recivedCommand = recivedData.substring(0, separationIndex);
-      recivedValue = recivedData.substring(separationIndex + 1, recivedData.length());
-      Serial.println("recivedValue: " + recivedValue);
-      ssid = recivedValue;
-    }
-    Serial.println("recivedCommand: " + recivedCommand);
-    Serial.println("recibi: " + recivedData);
-    separationIndex = -1;
-  }
-  recivedData = "UNSET:NULL";
-  Serial.println("recibi: " + recivedData);
-  mySerial.print("OK_NETWORK");
-  Serial.println("Enviando OK_NETWORK");
-
-  Serial.println("Esperando Password de Red");
-  while ( recivedCommand != "PASSWORD" ) {
-    while (!mySerial.available()) {
-    }
-    mySerial.print("OK_NETWORK");
-    Serial.println("Enviando OK_NETWORK");
-    recivedData = mySerial.readString();
-    separationIndex = recivedData.indexOf(":");
-    if (separationIndex != -1) {
-      recivedCommand = recivedData.substring(0, separationIndex);
-      recivedValue = recivedData.substring(separationIndex + 1, recivedData.length());
-      Serial.println("recivedValue: " + recivedValue);
-      password = recivedValue;
-    }
-    Serial.println("recivedCommand: " + recivedCommand);
-    Serial.println("recibi: " + recivedData);
-    separationIndex = -1;
-  }
-  mySerial.print("OK_PASSWORD");
- */
-
+  Serial.println("Iniciando Configuracion");
   ssid = receiveCommand("NETWORK", "UNSET");
   password = receiveCommand("PASSWORD", "NETWORK");
   serverName =  receiveCommand("SERVER", "PASSWORD");
@@ -129,11 +51,6 @@ void loop()
   String recivedData = mySerial.readString();
   Serial.println("recibi: " + recivedData);
 
-  // if (isnan(recivedData) || isnan(t)) {
-  // Serial.println("Error al obtener los datos");
-  // return;
-  // }
-  //  Abrir el Serial monitor para ver los datos
   // Etapa2 - Envio
   // Send an HTTP POST request every 30 seconds
 
@@ -171,4 +88,36 @@ void loop()
     }
     lastTime = millis();
   }
+}
+
+String receiveCommand(String command, String previusCommand)
+{
+  String recivedValue = "";
+  String recivedData = "UNSET:NULL";
+  String recivedCommand = "UNSET";
+  Serial.println("Esperando " + command);
+  int separationIndex = -1;
+  Serial.println("recibi: " + recivedData);
+  mySerial.print(previusCommand);
+  Serial.println("Enviando " + previusCommand);
+  while (recivedCommand != command)
+  {
+    while (!mySerial.available())
+    {
+    }
+    mySerial.print(previusCommand);
+    Serial.println("Enviando " + previusCommand);
+    recivedData = mySerial.readString();
+    separationIndex = recivedData.indexOf(":");
+    if (separationIndex != -1)
+    {
+      recivedCommand = recivedData.substring(0, separationIndex);
+      recivedValue = recivedData.substring(separationIndex + 1, recivedData.length());
+      Serial.println("recivedValue: " + recivedValue);
+    }
+    Serial.println("recivedCommand: " + recivedCommand);
+    Serial.println("recibi: " + recivedData);
+    separationIndex = -1;
+  }
+  return recivedValue;
 }
