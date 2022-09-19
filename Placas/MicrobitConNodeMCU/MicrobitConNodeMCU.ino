@@ -21,11 +21,12 @@ String recivedCommand = "UNSET";
 String recivedValue = "";
 int separationIndex = -1;
 
-string receiveCommand(command, previusCommand)
+String receiveCommand(String command, String previusCommand)
 {
   Serial.println("Esperando " + command);
   recivedData = "UNSET:NULL";
-  separationIndex = -1 Serial.println("recibi: " + recivedData);
+  separationIndex = -1 ;
+  Serial.println("recibi: " + recivedData);
   mySerial.print(previusCommand);
   Serial.println("Enviando " + previusCommand);
   while (recivedCommand != command)
