@@ -21,13 +21,20 @@ void setup()
 {
   String ssid = "";
   String password = "";
+  String serverURL = "";
   Serial.begin(115200);
   mySerial.begin(9600);
-  delay(100);
+  delay(1000);
   Serial.println("Iniciando Configuracion");
+  delay(1000);
   ssid = receiveCommand("NETWORK", "UNSET");
+  Serial.println("ssid: " + ssid);
+  delay(1000);
   password = receiveCommand("PASSWORD", "NETWORK");
-  serverName =  receiveCommand("SERVER", "PASSWORD");
+  delay(1000);
+  serverURL =  receiveCommand("SERVER", "PASSWORD");
+  serverName = serverURL;
+  delay(1000);
   //
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED)
@@ -92,21 +99,22 @@ void loop()
 
 String receiveCommand(String command, String previusCommand)
 {
+  String okStr = "OK_";
   String recivedValue = "";
   String recivedData = "UNSET:NULL";
   String recivedCommand = "UNSET";
   Serial.println("Esperando " + command);
   int separationIndex = -1;
   Serial.println("recibi: " + recivedData);
-  mySerial.print(previusCommand);
-  Serial.println("Enviando " + previusCommand);
+  mySerial.print(okStr + previusCommand);
+  Serial.println("Enviando " + okStr + previusCommand);
   while (recivedCommand != command)
   {
     while (!mySerial.available())
     {
     }
-    mySerial.print(previusCommand);
-    Serial.println("Enviando " + previusCommand);
+    mySerial.print(okStr + previusCommand);
+    Serial.println("Enviando " + okStr + previusCommand);
     recivedData = mySerial.readString();
     separationIndex = recivedData.indexOf(":");
     if (separationIndex != -1)
@@ -119,5 +127,7 @@ String receiveCommand(String command, String previusCommand)
     Serial.println("recibi: " + recivedData);
     separationIndex = -1;
   }
+  mySerial.print(okStr + command);
+  Serial.println("Enviando " + okStr + command);
   return recivedValue;
 }
