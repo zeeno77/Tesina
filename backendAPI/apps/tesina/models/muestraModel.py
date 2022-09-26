@@ -5,7 +5,8 @@ from pydantic import BaseModel, Field
 
 class MuestraModel(BaseModel):
     id: str = Field(default_factory=uuid.uuid4, alias="_id")
-    datosensado: str = Field(...)
+    origen: str = Field(...)
+    sensor: str = Field(...)
     valor: str = Field(...)
     
     ##Example for FastApi
@@ -14,21 +15,24 @@ class MuestraModel(BaseModel):
         schema_extra = {
             "example": {
                 "id": "00010203-0405-0607-0809-0a0b0c0d0e0f",
-                "datosensado": "nombreDato",
-                "valor": "unValor",
+                "origen": "deDondeViene",
+                "sensor": "queSensorEs",
+                "valor": "unValor"
             }
         }
 
 
 class UpdateMuestraModel(BaseModel):
-    datosensado: Optional[str]
+    origen: Optional[str]
+    sensor: Optional[str]
     valor: Optional[str]
 
     ##Example for FastApi   
     class Config:
         schema_extra = {
             "example": {
-                "datosensado": "nombreDato",
+                "origen": "deDondeViene",
+                "sensor": "queSensorEs",
                 "valor": "unValor",
             }
         }

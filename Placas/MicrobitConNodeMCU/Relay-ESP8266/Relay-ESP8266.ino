@@ -77,11 +77,10 @@ void loop()
       }
 
       http.addHeader("Content-Type", "application/json");
-      json = "{\"datosensado\":\"Data\",\"valor\":\"" + recivedData + "\"}";
-
+      
       Serial.println("Post:");
-      Serial.println(json);
-      httpResponseCode = http.POST(json);
+      Serial.println(recivedData);
+      httpResponseCode = http.POST(recivedData);
       Serial.print("HTTP Response code: ");
       Serial.println(httpResponseCode);
 
