@@ -131,3 +131,35 @@ String receiveCommand(String command, String previusCommand)
   Serial.println("Enviando " + okStr + command);
   return recivedValue;
 }
+
+
+String receiveData()
+{
+  String recivedOrigin = "";
+  String recivedSensor = "";
+  String recivedValue = "";
+  String recivedAux = "";
+  String recivedData = "";
+  Serial.println("Esperando Datos");
+  int separationIndex = -1;
+  int secondSeparationIndex = -1;
+  while (!mySerial.available())
+  {
+  }
+  recivedData = mySerial.readString();
+  separationIndex = recivedData.indexOf(":");
+  if (separationIndex != -1)
+  {
+    recivedOrigin = recivedData.substring(0, separationIndex);
+    recivedAux = recivedData.substring(separationIndex + 1, recivedData.length());
+    secondSeparationIndex = recivedAux.indexOf(":");
+    if (secondSeparationIndex != -1)
+    {
+       recivedSensor =  recivedAux.substring(0, secondSeparationIndex);
+       recivedValue = recivedAux.substring(secondSeparationIndex + 1, recivedAux.length());
+             json = "{\"origen\":\"" + recivedOrigin + "\",\"sensor\":\"" + recivedSensor + "\",\"valor\":\"" + recivedValue + "\"}";
+    }
+  }
+
+  return recivedValue;
+}
