@@ -11,9 +11,8 @@ SoftwareSerial mySerial(mySerialRx, mySerialTx);
 
 // Configuraciones Varias
 unsigned long sensorDelay = 5000;
-unsigned long timerDelay = 0;
+unsigned long timerDelay = 5000;
 unsigned long lastTime = 0;
-String json = "";
 int httpResponseCode = 0;
 String serverName = "NULL";
 
@@ -55,13 +54,13 @@ void loop()
   while (!mySerial.available())
   {
   }
-  String recivedData = mySerial.readString();
+  String recivedData = receiveData();
   Serial.println("recibi: " + recivedData);
 
   // Etapa2 - Envio
-  // Send an HTTP POST request every 30 seconds
+  // Send an HTTP POST request every timerDelay seconds
 
-  if ((millis() - lastTime) > timerDelay)
+  if (((millis() - lastTime) > timerDelay) && (recivedData != "ERROR"))
   {
     // Check WiFi connection status
     if (WiFi.status() == WL_CONNECTED)
@@ -140,6 +139,7 @@ String receiveData()
   String recivedValue = "";
   String recivedAux = "";
   String recivedData = "";
+  String json = "ERROR";
   Serial.println("Esperando Datos");
   int separationIndex = -1;
   int secondSeparationIndex = -1;
@@ -161,5 +161,5 @@ String receiveData()
     }
   }
 
-  return recivedValue;
+  return json;
 }
