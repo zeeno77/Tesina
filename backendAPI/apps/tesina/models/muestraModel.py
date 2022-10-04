@@ -1,10 +1,12 @@
 from typing import Optional
 import uuid
 from pydantic import BaseModel, Field
+from datetime import datetime
 
 
 class MuestraModel(BaseModel):
     id: str = Field(default_factory=uuid.uuid4, alias="_id")
+    fecha : datetime = Field(default_factory=datetime.now)
     origen: str = Field(...)
     sensor: str = Field(...)
     valor: str = Field(...)
