@@ -11,7 +11,7 @@ SoftwareSerial mySerial(mySerialRx, mySerialTx);
 
 // Configuraciones Varias
 unsigned long sensorDelay = 5000;
-unsigned long timerDelay = 5000;
+unsigned long timerDelay = 0;
 unsigned long lastTime = 0;
 int httpResponseCode = 0;
 String serverName = "NULL";

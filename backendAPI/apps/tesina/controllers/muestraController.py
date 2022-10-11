@@ -1,3 +1,4 @@
+from datetime import datetime
 from fastapi import APIRouter, Body, Request, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
@@ -66,3 +67,14 @@ async def delete_muestra(id: str, request: Request):
         return JSONResponse(status_code=status.HTTP_204_NO_CONTENT)
 
     raise HTTPException(status_code=404, detail=f"Muestra {id} not found")
+
+#Todo: This is to quick and dirty, please refactorize
+@muestraRouter.get("/sensor/{sensor}", response_description="Get last sensor reading")
+async def show_sensor(sensor: str, request: Request):
+    muestras = []
+    for doc in await request.app.mongodb["muestras"].find({"sensor": sensor}).to_list(length=1000):
+        muestras.append(doc)
+    return muestras.pop()
+
+
+
