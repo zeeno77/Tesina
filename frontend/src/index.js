@@ -1,3 +1,4 @@
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 import {RadialGauge} from 'react-canvas-gauges';
@@ -72,10 +73,9 @@ class App extends Component {
   
   render() {
     return (
-      <div>
       <Container>
-      <Row>
-        <Col>
+      <Row className="justify-content-md-center">
+        <Col md={6}>
         <RadialGauge
            data-width='300'
            data-height='300'
@@ -88,7 +88,7 @@ class App extends Component {
            minorTicks={1}
         ></RadialGauge>
         </Col>
-        <Col><RadialGauge
+        <Col md={6}><RadialGauge
          data-width='300'
          data-height='300'
          units='%'
@@ -102,7 +102,6 @@ class App extends Component {
       </Col>
       </Row>
     </Container>
-    </div>  
     );
   }
 }
