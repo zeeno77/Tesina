@@ -10,7 +10,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 
-from apps.tesina.controllers.muestraController import muestraRouter
+from tesina.controllers.muestraController import muestraRouter
 
 
 
