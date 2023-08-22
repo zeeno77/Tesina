@@ -28,8 +28,8 @@ app.add_middleware(
 )
 
 #Incluir los routers
-app.include_router(muestraRouter, tags=["muestras"], prefix="/muestra")
-
+app.include_router(muestraRouter, tags=["muestras"], prefix="/api")
+#app.include_router(muestraRouter, tags=["muestras"], prefix="/muestra")
 
 
 @app.on_event("startup")

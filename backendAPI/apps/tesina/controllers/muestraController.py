@@ -8,8 +8,12 @@ from ..models.muestraModel import MuestraModel, UpdateMuestraModel
 
 muestraRouter = APIRouter()
 
+@muestraRouter.get("/", response_description="Test API")
+async def test_api(request: Request):
+    return { "Test": "OK" }
 
-@muestraRouter.post("/", response_description="Add new muestra")
+
+@muestraRouter.post("/muestras/", response_description="Add new muestra")
 async def create_muestra(request: Request, muestra: MuestraModel = Body(...)):
     muestra = jsonable_encoder(muestra)
     new_muestra = await request.app.mongodb["muestras"].insert_one(muestra)
@@ -20,7 +24,7 @@ async def create_muestra(request: Request, muestra: MuestraModel = Body(...)):
     return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_muestra)
 
 
-@muestraRouter.get("/", response_description="List all muestras")
+@muestraRouter.get("/muestras/", response_description="List all muestras")
 async def list_muestras(request: Request):
     muestras = []
     for doc in await request.app.mongodb["muestras"].find().to_list(length=100):
@@ -28,7 +32,7 @@ async def list_muestras(request: Request):
     return muestras
 
 
-@muestraRouter.get("/{id}", response_description="Get a single muestra")
+@muestraRouter.get("/muestras/{id}", response_description="Get a single muestra")
 async def show_muestra(id: str, request: Request):
     if (muestra := await request.app.mongodb["muestras"].find_one({"_id": id})) is not None:
         return muestra
@@ -36,7 +40,7 @@ async def show_muestra(id: str, request: Request):
     raise HTTPException(status_code=404, detail=f"Muestra {id} not found")
 
 
-@muestraRouter.put("/{id}", response_description="Update a muestra")
+@muestraRouter.put("/muestras/{id}", response_description="Update a muestra")
 async def update_muestra(id: str, request: Request, muestra: UpdateMuestraModel = Body(...)):
     muestra = {k: v for k, v in muestra.dict().items() if v is not None}
 
@@ -59,7 +63,7 @@ async def update_muestra(id: str, request: Request, muestra: UpdateMuestraModel 
     raise HTTPException(status_code=404, detail=f"Muestra {id} not found")
 
 
-@muestraRouter.delete("/{id}", response_description="Delete Muestra")
+@muestraRouter.delete("/muestras/{id}", response_description="Delete Muestra")
 async def delete_muestra(id: str, request: Request):
     delete_result = await request.app.mongodb["muestras"].delete_one({"_id": id})
 
@@ -69,7 +73,7 @@ async def delete_muestra(id: str, request: Request):
     raise HTTPException(status_code=404, detail=f"Muestra {id} not found")
 
 #Todo: This is to quick and dirty, please refactorize
-@muestraRouter.get("/sensor/{sensor}", response_description="Get last sensor reading")
+@muestraRouter.get("/muestras/sensor/{sensor}", response_description="Get last sensor reading")
 async def show_sensor(sensor: str, request: Request):
     muestras = []
     for doc in await request.app.mongodb["muestras"].find({"sensor": sensor}).to_list(length=1000):
