@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 import uvicorn
 from motor.motor_asyncio import AsyncIOMotorClient
-from config import settings
 from fastapi.middleware.cors import CORSMiddleware
+import os
+from urllib.parse import quote_plus
 
 import logging
 from fastapi import FastAPI, Request, status
@@ -10,7 +11,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 
-from tesina.controllers.muestraController import muestraRouter
+from app.controllers.muestraController import muestraRouter
 
 
 
@@ -29,13 +30,20 @@ app.add_middleware(
 
 #Incluir los routers
 app.include_router(muestraRouter, tags=["muestras"], prefix="/api")
-#app.include_router(muestraRouter, tags=["muestras"], prefix="/muestra")
+
 
 
 @app.on_event("startup")
 async def startup_db_client():
-    app.mongodb_client = AsyncIOMotorClient(settings.DB_URL)
-    app.mongodb = app.mongodb_client[settings.DB_NAME]
+    host = os.getenv('MONGODB_HOST', '')
+    username = os.getenv('MONGODB_USER', '')
+    password = os.getenv('MONGODB_PASSWORD', '')
+    port = int(os.getenv('MONGODB_PORT', 27017))
+    dbname = os.getenv('MONGODB_DBNAME', '')
+    endpoint = 'mongodb://{0}:{1}@{2}'.format(quote_plus(username),
+                                              quote_plus(password), host)
+    app.mongodb_client = AsyncIOMotorClient(endpoint, port)
+    app.mongodb = app.mongodb_client[dbname]
 
 
 @app.on_event("shutdown")
@@ -49,11 +57,3 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 	content = {'status_code': 10422, 'message': exc_str, 'data': None}
 	return JSONResponse(content=content, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
-
-if __name__ == "__main__":
-    uvicorn.run(
-        "main:app",
-        host=settings.HOST,
-        reload=settings.DEBUG_MODE,
-        port=settings.PORT,
-    )
