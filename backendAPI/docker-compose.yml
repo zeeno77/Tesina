@@ -34,4 +34,11 @@ services:
       MONGODB_PASSWORD: ${MONGO_PASSWORD}
       MONGODB_DBNAME: ${MONGO_DBNAME}
       PYTHONPATH: /app
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_INSTALL_PLUGINS=marcusolsson-json-datasource
 
