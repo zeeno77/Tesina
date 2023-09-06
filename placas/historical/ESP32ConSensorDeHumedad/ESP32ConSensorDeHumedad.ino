@@ -9,8 +9,8 @@
 DHT dht(DHTPIN, DHTTYPE);
 
 //Configuracion del wifi
-const char* ssid = "arrakis";
-const char* password = "thespicemustflow";
+const char* ssid = "";
+const char* password = "";
 //API REST URL
 const char* serverName = "http://192.168.88.53:8000/muestra/";
 
