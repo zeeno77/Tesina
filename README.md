@@ -29,7 +29,7 @@ Estos dos comandos nos van a levantar los siguientes servidores
 
 
 ## **Placas:**
-**Prerequisitos:** Tener instalado el Arduino IDE[^2], la libreria de ESP para Arduino y MakeCode[^3].
+**Prerequisitos:** Tener instalado el Arduino IDE[^2], las librerias[^3][^4] de ESP para Arduino y MakeCode[^5].
 
 ### Configuración de la ESP
 Abrir con el Arduino IDE el achivo Relay-ESP8266.ino contenido en placas/microbitConESP/Relay-ESP8266, conectar la ESP via usb y subir el codigo.
@@ -41,5 +41,6 @@ Abrir makecode e importar el archivo microbit-pruebaCasita.hex contenido en plac
 
 [^1]: Powershell en Windows, Terminal en Mac o Linux.
 [^2]: https://www.arduino.cc/en/software
-[^3]: https://makecode.microbit.org/offline-app
-
+[^3]: https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+[^4]: http://arduino.esp8266.com/stable/package_esp8266com_index.json
+[^5]: https://makecode.microbit.org/offline-app
