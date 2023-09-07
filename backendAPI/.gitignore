@@ -191,4 +191,7 @@ cython_debug/
 # Ignore code-workspaces
 *.code-workspace
 
+#Librerias Arduino
+.placas/microbitConESP/libraries
+
 # End of https://www.toptal.com/developers/gitignore/api/python,visualstudiocode
