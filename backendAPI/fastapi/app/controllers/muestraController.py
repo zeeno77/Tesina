@@ -76,10 +76,13 @@ async def delete_muestra(id: str, request: Request):
 @muestraRouter.get("/muestras/sensor/{sensor}", response_description="Get readings by sensor")
 async def show_sensor(sensor: str, request: Request):
     muestras = []
-#   async for doc in request.app.mongodb["muestras"].find({"sensor": sensor}).sort("fecha", -1): # -1 = Descending
     async for doc in request.app.mongodb["muestras"].find({"sensor": sensor}):
         muestras.append(doc)
     return muestras
 
 
-
+@muestraRouter.get("/muestras/sensor/ultimalectura/{sensor}", response_description="Get the last read by sensor")
+async def show_sensor(sensor: str, request: Request):
+    async for doc in request.app.mongodb["muestras"].find({"sensor": sensor}).sort("fecha", -1).limit(1): # -1 = Descending
+        return [doc]
+    return []
