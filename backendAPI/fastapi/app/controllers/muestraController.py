@@ -27,7 +27,7 @@ async def create_muestra(request: Request, muestra: MuestraModel = Body(...)):
 @muestraRouter.get("/muestras/", response_description="List all muestras")
 async def list_muestras(request: Request):
     muestras = []
-    for doc in await request.app.mongodb["muestras"].find().to_list(length=100):
+    async for doc in request.app.mongodb["muestras"].find().sort("fecha", -1): # -1 = Descending
         muestras.append(doc)
     return muestras
 
@@ -72,13 +72,17 @@ async def delete_muestra(id: str, request: Request):
 
     raise HTTPException(status_code=404, detail=f"Muestra {id} not found")
 
-#Todo: This is to quick and dirty, please refactorize
-@muestraRouter.get("/muestras/sensor/{sensor}", response_description="Get last sensor reading")
+
+@muestraRouter.get("/muestras/sensor/{sensor}", response_description="Get readings by sensor")
 async def show_sensor(sensor: str, request: Request):
     muestras = []
-    for doc in await request.app.mongodb["muestras"].find({"sensor": sensor}).to_list(length=1000):
+    async for doc in request.app.mongodb["muestras"].find({"sensor": sensor}):
         muestras.append(doc)
-    return muestras.pop()
+    return muestras
 
 
-
+@muestraRouter.get("/muestras/sensor/ultimalectura/{sensor}", response_description="Get the last read by sensor")
+async def show_sensor(sensor: str, request: Request):
+    async for doc in request.app.mongodb["muestras"].find({"sensor": sensor}).sort("fecha", -1).limit(1): # -1 = Descending
+        return [doc]
+    return []
