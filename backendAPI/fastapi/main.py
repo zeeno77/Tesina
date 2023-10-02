@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+import logging
 import uvicorn
 from motor.motor_asyncio import AsyncIOMotorClient
 from fastapi.middleware.cors import CORSMiddleware
@@ -10,10 +11,13 @@ from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
+
 
 from app.controllers.muestraController import muestraRouter
 
-
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("fastapi")
 
 #Running on http://localhost:8000/docs#/
 app = FastAPI()
@@ -57,3 +61,17 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 	content = {'status_code': 10422, 'message': exc_str, 'data': None}
 	return JSONResponse(content=content, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
+# Custom middleware to log request and response information
+@app.middleware("http")
+async def custom_logging_middleware(request: Request, call_next):
+    request_info = f"{request.client.host}:{request.client.port} - \"{request.method} {request.url.path}\""
+    logger.info(request_info)
+
+    # Access the request content
+    content = await request.body()
+
+    # Log the content (you can decode it if it's in bytes)
+    logger.info(f"Contenido: {content.decode()}")
+
+    response = await call_next(request)
+    return response
