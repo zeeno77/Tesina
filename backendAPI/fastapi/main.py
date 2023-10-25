@@ -61,13 +61,14 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 	return JSONResponse(content=content, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
 # Custom middleware to log request and response information
-@app.middleware("http")
-async def custom_logging_middleware(request: Request, call_next):
-    request_info = f"  {request.client.host}:{request.client.port} - \"{request.method} {request.url.path}\""
-    content = await request.body()     
-    response = await call_next(request)   
-    logger.info(request_info)
-    logger.info(f"  Contenido:")
-    logger.info(f"            {content.decode()}")
-    logger.info('--------------------------------------------------------------------------------------------------')
-    return response
+# Muestra pero rompe la persistencia
+#@app.middleware("http")
+#async def custom_logging_middleware(request: Request, call_next):
+#    request_info = f"  {request.client.host}:{request.client.port} - \"{request.method} {request.url.path}\""
+#    content = await request.body()     
+#    response = await call_next(request)   
+#    logger.info(request_info)
+#    logger.info(f"  Contenido:")
+#    logger.info(f"            {content.decode()}")
+#    logger.info('--------------------------------------------------------------------------------------------------')
+#    return response

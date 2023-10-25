@@ -15,16 +15,16 @@ async def test_api(request: Request):
 
 @muestraRouter.post("/muestras/", response_description="Add new muestra")
 async def create_muestra(request: Request, muestra: MuestraModel = Body(...)):
-#    muestra = jsonable_encoder(muestra)
-   #if value ping -> no guardar Q&D
-#    if muestra["valor"] == 'ping' and muestra["sensor"] == 'still-alive':
-#        return JSONResponse(status_code=status.HTTP_200_OK, content={"Ping": "OK"})
-#    else:
-    new_muestra = await request.app.mongodb["muestras"].insert_one(muestra)
-    created_muestra = await request.app.mongodb["muestras"].find_one(
-        {"_id": new_muestra.inserted_id}
-    )
-    return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_muestra)
+    muestra = jsonable_encoder(muestra)
+        #if value ping -> no guardar Q&D
+    if muestra["valor"] == 'ping' and muestra["sensor"] == 'still-alive':
+        return JSONResponse(status_code=status.HTTP_200_OK, content={"Ping": "OK"})
+    else:
+        new_muestra = await request.app.mongodb["muestras"].insert_one(muestra)
+        created_muestra = await request.app.mongodb["muestras"].find_one(
+            {"_id": new_muestra.inserted_id}
+        )
+        return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_muestra)
 
 
 @muestraRouter.get("/muestras/", response_description="List all muestras")
